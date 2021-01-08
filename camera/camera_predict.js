@@ -271,9 +271,6 @@ async function captureFrame() {
     console.log("Faces: " +  faces.length);
 
     faces.forEach(function(rect) {
-
-      console.log(rect);
-
       cv.rectangle(frame, {x: rect.x, y: rect.y}, {x: rect.x + rect.width, y: rect.y + rect.height}, [0, 255, 0, 255]);
 
       var faceRoi = frameBGR.roi(rect);
