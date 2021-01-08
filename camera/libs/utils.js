@@ -43,8 +43,8 @@ function overrideUrls() {
   console.log(image_link);
   console.log(camera_link);
 
-  var host = window.location.host;
-  real_website = host.includes("igla.su/mouth-open-js/");
+  var host = window.location.href;
+  real_website = host.includes("igla.su/mouth-open-js");
   console.log(real_website);
 
   if(real_website) {
