@@ -51,7 +51,25 @@
 
   <div id="status" style="margin-top: 5px;"></div>
   <canvas id="output" width=640 height=480 style="max-width: 100%; margin-left: 5px;"></canvas>
-  <canvas id="canvasOutput" width=120 height=80 style='display: inline-block; margin-left: 5px; vertical-align:top;'></canvas>
+
+  <div style='display: inline-block; margin-left: 5px; vertical-align:top;'>
+    <canvas id="canvasOutput" width=120 height=80 ></canvas>
+    
+    <style>
+      /*Disable animation to update now*/
+      .progress .progress-bar {
+        -webkit-transition: none;
+            -o-transition: none;
+                transition: none;
+      }
+    </style>
+    <div class='progress'>
+      <div id='progress-bar' class='progress-bar progress-bar-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100' style='width:50%'>
+      </div>
+    </div>
+  </div>
+
+
   <table>
     <tr id="targetImgs"></tr>
     <tr id="targetNames"></tr>

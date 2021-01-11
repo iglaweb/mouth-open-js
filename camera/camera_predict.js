@@ -44,6 +44,7 @@ let frameBGR = null;
 let frameGray = null;
 
 let enableWebcamButton = null;
+let progressBar = null;
 
 
 function detectFacesCascade(img) {
@@ -184,6 +185,7 @@ function loadModels(callback) {
 };
 
 function initUI() {
+  progressBar = document.getElementById("progress-bar");
   enableWebcamButton = document.getElementById('startStopButton');
 
   // Create a camera object.
@@ -248,7 +250,7 @@ async function captureFrame() {
     if (!streaming) {
         // clean and stop.
         return;
-	}
+    }
 	
     cap.read(frame);  // Read a frame from camera
 
@@ -280,27 +282,33 @@ async function captureFrame() {
       const start = performance.now();
       var yawn_ret = detectYawnProbability(frameGray);
       console.log(yawn_ret[0]);
-        var yawn_prob = Math.round(yawn_ret[0] * 100) / 100;
-        const time  = Math.round(performance.now() - start);
-        console.log('Yawn inference time: ' + time + ' ms');
-        console.log('Prediction: ' + yawn_prob);
+      var yawn_prob = Math.round(yawn_ret[0] * 100) / 100;
+      const time  = Math.round(performance.now() - start);
+      console.log('Yawn inference time: ' + time + ' ms');
+      console.log('Prediction: ' + yawn_prob);
 
-      if(yawn_prob > 0.2) {
-      mouthCounter++;
-	  }
-	  var mouth_opened_str = yawn_prob > 0.2 ? "Mouth: opened" : "Mouth: closed";
-	  var counter_str = "Counter: " + mouthCounter;
-	  var mouth_time_str = "Time: " + time + " ms";
-	  var topY = 40;
+      let percentOpened = parseInt(Math.trunc(yawn_prob * 100));
+      let pb_color = yawn_prob >= 0.2 ? 'red' : 'blue';
+      progressBar.style.background = pb_color;
+      progressBar.style.width = percentOpened + '%';
 
-	  cv.putText(frame, "Confidence: " + yawn_prob, {x: 20, y: topY}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
+      if(yawn_prob >= 0.2) {
+        mouthCounter++;
+      }
+
+      var mouth_opened_str = yawn_prob >= 0.2 ? "Mouth: opened" : "Mouth: closed";
+      var counter_str = "Mouth Opened: " + mouthCounter;
+      var mouth_time_str = "Time: " + time + " ms";
+      var topY = 40;
+
+      cv.putText(frame, "Confidence: " + yawn_prob, {x: 20, y: topY}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
       cv.putText(frame, mouth_opened_str, {x: 20, y: topY + 25}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
-	  cv.putText(frame, mouth_time_str, {x: 20, y: topY + 50}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
-	  cv.putText(frame, counter_str, {x: 20, y: topY + 75}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
-	  
-	  cv.imshow(outputCanvas, frameGray);
-	  
-	  faceRoi.delete();
+      cv.putText(frame, mouth_time_str, {x: 20, y: topY + 50}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
+      cv.putText(frame, counter_str, {x: 20, y: topY + 75}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
+      
+      cv.imshow(outputCanvas, frameGray);
+      
+      faceRoi.delete();
     });
 
     stats.end();

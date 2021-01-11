@@ -61,6 +61,6 @@ $("#predictBtn").click(async function () {
 	let percentOpened = parseInt(Math.trunc(probability * 100));
 	let pb_color = percentOpened >= 20 ? 'red' : 'blue';
 	let pb_style = "background:" + pb_color + ";width:" + percentOpened + "%";
-	pb = "<div id='myProgress' class='progress'><div id='progress-bar' class='progress-bar progress-bar-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100' style='" + pb_style + "'></div></div>";
+	pb = "<div class='progress'><div id='progress-bar' class='progress-bar progress-bar-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100' style='" + pb_style + "'></div></div>";
 	$("#prediction-list").append(`<li>probability: ${percentOpened}% opened, time elapsed: ${time1} ms ${pb}</li>`);
 });
