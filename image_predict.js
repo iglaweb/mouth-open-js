@@ -22,14 +22,16 @@ async function init_models() {
 	$('.progress-bar').show();
 	try {
 		yawn_js_model = await tf.loadLayersModel(js_model_url);
+		console.log("Model loaded successfully")
 	} catch(e) {
-		console.log("the model could not be loaded")
+		console.log("Model could not be loaded")
 		console.log(e)
+		
+		$(".toast").toast('show');
+	} finally {
+		$('.progress-bar').hide();
 	}
-	console.log("the model loaded successfully")
-	$('.progress-bar').hide();
 }
-
 
 let yawn_js_model;
 $(document).ready(init_models());
@@ -55,5 +57,10 @@ $("#predictBtn").click(async function () {
     console.log('Face inference time: ' + time1 + ' ms');
 	console.log(probability);
 	$("#prediction-list").empty();
-	$("#prediction-list").append(`<li>probability: ${parseInt(Math.trunc(probability * 100))}%, time elapsed: ${time1} ms</li>`);
+
+	let percentOpened = parseInt(Math.trunc(probability * 100));
+	let pb_color = percentOpened >= 20 ? 'red' : 'blue';
+	let pb_style = "background:" + pb_color + ";width:" + percentOpened + "%";
+	pb = "<div id='myProgress' class='progress'><div id='progress-bar' class='progress-bar progress-bar-striped active' role='progressbar' aria-valuemin='0' aria-valuemax='100' style='" + pb_style + "'></div></div>";
+	$("#prediction-list").append(`<li>probability: ${percentOpened}% opened, time elapsed: ${time1} ms ${pb}</li>`);
 });
