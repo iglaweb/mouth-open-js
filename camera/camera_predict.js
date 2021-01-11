@@ -1,3 +1,58 @@
+class TimeObj {
+  constructor(time, obj) {
+    this.time = time;
+    this.obj = obj;
+  }
+}
+
+class Queue {
+  constructor() {
+     // Init an array that'll contain the queue values.
+     this.container = [];
+     this.length = 0;
+   }
+  // Helper function to display all values while developing
+  display() {
+     console.log(this.container);
+  }
+  // Checks if queue is empty
+  isEmpty() {
+     return this.container.length === 0;
+  }
+  enqueue(element) {
+     this.length++;
+     // Since we want to add elements to end, we'll just push them.
+     this.container.push(element);
+  }
+  dequeue() {
+     // Check if empty
+     if (this.isEmpty()) {
+        console.log("Queue Underflow!");
+        return;
+     }
+     this.length--;
+     return this.container.shift();
+  }
+  peek() {
+     if (this.isEmpty()) {
+        console.log("Queue Underflow!");
+        return;
+     }
+     return this.container[0];
+  }
+  clear() {
+     this.container = [];
+     this.length = 0;
+  }
+  size() {
+    return this.length;
+  }
+}
+
+var queue = new Queue();
+var yawns_count = 0;
+
+
 let blazeface_model = null;
 const state = {
   backend: 'wasm'
@@ -245,6 +300,7 @@ function startCamera() {
   //! [Open a camera stream]
 }
 
+
 //! [Define frames processing]
 async function captureFrame() {
     if (!streaming) {
@@ -292,6 +348,43 @@ async function captureFrame() {
       progressBar.style.background = pb_color;
       progressBar.style.width = percentOpened + '%';
 
+      const periodYawn = 2000;
+      const currentTime  = Math.round(performance.now());
+      const timeObj = new TimeObj(currentTime, yawn_prob);
+      queue.enqueue(new TimeObj(currentTime, yawn_prob)); 
+      // remove oldest objects
+      while (!queue.isEmpty()) {
+        lastTime = queue.peek().time;
+        if(Math.abs(lastTime - currentTime) >= periodYawn) {
+          console.log('Delete: ' + queue.dequeue());
+        } else {
+          break;
+        }
+      }
+
+      // queue.display();
+      // alert only if critical event ratio >= 0.9
+      let min_events = 3;
+      let yawn_ratio_base = 0.9;
+      let critical = 0;
+      let total = 0;
+      queue.container.forEach(function (arrayItem) {
+          var conf = arrayItem.obj;
+          total++;
+          if(conf >= 0.2) {
+            critical++;
+          }
+      });
+
+      let ratioEvents = total > 0 ? critical / total : 0;
+      console.log('Yawn ratio: ' + ratioEvents + '/' + yawn_ratio_base);
+      let found_yawn = ratioEvents >= yawn_ratio_base && queue.size() >= min_events;
+      let yawn_count_str = "Yawns: " + yawns_count;
+      if(found_yawn) {
+        yawns_count++;
+        queue.clear();
+      }
+
       if(yawn_prob >= 0.2) {
         mouthCounter++;
       }
@@ -301,10 +394,12 @@ async function captureFrame() {
       var mouth_time_str = "Time: " + time + " ms";
       var topY = 40;
 
+
       cv.putText(frame, "Confidence: " + yawn_prob, {x: 20, y: topY}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
       cv.putText(frame, mouth_opened_str, {x: 20, y: topY + 25}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
       cv.putText(frame, mouth_time_str, {x: 20, y: topY + 50}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
       cv.putText(frame, counter_str, {x: 20, y: topY + 75}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
+      cv.putText(frame, yawn_count_str, {x: 20, y: topY + 100}, cv.FONT_HERSHEY_SIMPLEX, 0.8, [0, 255, 0, 255]);
       
       cv.imshow(outputCanvas, frameGray);
       
