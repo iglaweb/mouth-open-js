@@ -54,9 +54,30 @@
           </div>
         </div>
       </div>
-      <div class="row">
+
+      <div class="row col-6">
+        <div class="dropdown" id="myDropdown">
+          Model:
+          <button class="btn btn-primary btn-sm dropdown-toggle status" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Full
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Full</a>
+            <a class="dropdown-item" href="#">Lite</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style='margin-top:10px'>
         <div class="col-6">
-          <input id="image-selector" class="form-control border-0" type="file" />
+
+          <div class="form-group">
+            <div class="custom-file">
+              <input type="file" id="image-selector" class="custom-file-input">
+              <label class="custom-file-label">Choose image</label>
+            </div>
+          </div>
+
         </div>
         <div class="col-6">
           <button id="predictBtn" class="btn btn-primary float-right">

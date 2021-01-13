@@ -4,9 +4,24 @@ if(typeof jQuery!=='undefined') {
     console.log('jQuery not loaded yet');
 }
 
-var js_model_url = 'https://raw.githubusercontent.com/iglaweb/YawnMouthOpenDetect/master/out_epoch_60/tfjs_model_60/model.json'
+var js_full_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_80_full/tfjs_model_80/model.json'
+var js_lite_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_80_lite/tfjs_model_80/model.json'
+
+
+$(".dropdown-menu a").click(function(){
+	var selText = $(this).text();
+	console.log(selText);
+	$('.status').text(this.innerHTML);
+	// reload models
+	init_models();
+});
+
 
 $("#image-selector").change(function () {
+	var fileName = $(this).val();
+	//replace the "Choose a file" label
+	$(this).next('.custom-file-label').html(fileName);
+
 	let reader = new FileReader();
 	reader.onload = function () {
 		let dataURL = reader.result;
@@ -18,10 +33,28 @@ $("#image-selector").change(function () {
 	reader.readAsDataURL(file);
 });
 
+let lastSelectedValue = null;
+
 async function init_models() {
+	let selectedValue = $('.dropdown-toggle').text().trim();
+	if(lastSelectedValue == selectedValue) {
+		console.log('Value not changed')
+		return;
+	}
+
 	$('.progress-bar').show();
+
+	lastSelectedValue = selectedValue;
+	var model_url = undefined;
+	if(selectedValue == 'Full') {
+		model_url = js_full_model_url;
+	} else {
+		model_url = js_lite_model_url;
+	}
+	console.log('Use model: ' + model_url);
+
 	try {
-		yawn_js_model = await tf.loadLayersModel(js_model_url);
+		yawn_js_model = await tf.loadLayersModel(model_url);
 		console.log("Model loaded successfully")
 	} catch(e) {
 		console.log("Model could not be loaded")
