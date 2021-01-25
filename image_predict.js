@@ -4,8 +4,8 @@ if(typeof jQuery!=='undefined') {
     console.log('jQuery not loaded yet');
 }
 
-var js_full_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_80_full/tfjs_model_80/model.json'
-var js_lite_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_80_lite/tfjs_model_80/model.json'
+var js_full_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_70_pro/tfjs_model_70/model.json'
+var js_lite_model_url = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_70_lite/tfjs_model_70/model.json'
 
 
 $(".dropdown-menu a").click(function(){
