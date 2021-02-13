@@ -203,7 +203,7 @@ function loadModels(callback) {
   var utils = new Utils('');
   var proto = 'https://raw.githubusercontent.com/opencv/opencv/master/samples/dnn/face_detector/deploy_lowres.prototxt';
   var weights = 'https://raw.githubusercontent.com/opencv/opencv_3rdparty/dnn_samples_face_detector_20180205_fp16/res10_300x300_ssd_iter_140000_fp16.caffemodel';
-  var onnx_yawn = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_70_lite/yawn_model_70.onnx';
+  var onnx_yawn = 'https://raw.githubusercontent.com/iglaweb/HippoYD/master/out_epoch_80_lite/yawn_model_80.onnx';
   var face_cascade_url = 'https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml';
 
   var onnx_yawn_name = 'yawn_model_70.onnx';
